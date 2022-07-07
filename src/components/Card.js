@@ -1,5 +1,8 @@
 import React, {useState} from 'react';
 import EditTask from '../modals/EditTask'
+import draftToHtml from 'draftjs-to-html';
+import { convertToRaw } from 'draft-js';
+import htmlToDraft from 'html-to-draftjs';
 
 const Card = ({taskObj, index, deleteTask, updateListArray}) => {
     const [modal, setModal] = useState(false);
@@ -43,8 +46,10 @@ const Card = ({taskObj, index, deleteTask, updateListArray}) => {
         <div class = "card-wrapper mr-5">
             <div class = "card-top" style={{"background-color": colors[index%5].primaryColor}}></div>
             <div class = "task-holder">
-                <span class = "card-header" style={{"background-color": colors[index%5].secondaryColor, "border-radius": "10px"}}>{taskObj.Name}</span>
-                <p className = "mt-3">{taskObj.Description}</p>
+                <div class = "card-header">
+                <span  style={{"background-color": colors[index%5].secondaryColor, "border-radius": "10px"}}>{taskObj.Name}</span>
+                </div>
+                <textarea disabled className = "mt-3 overflow-auto" value={draftToHtml(convertToRaw(taskObj.Description))}/>
 
                 <div style={{"position": "absolute", "right" : "20px", "bottom" : "20px"}}>
                     <i class = "far fa-edit mr-3" style={{"color" : colors[index%5].primaryColor, "cursor" : "pointer"}} onClick = {() => setModal(true)}></i>
