@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Editor } from 'react-draft-wysiwyg';
-import { EditorState } from 'draft-js';
+import { EditorState, convertToRaw } from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import draftToHtml from 'draftjs-to-html';
 
 
 const CreateTaskPopup = ({ modal, toggle, save }) => {
@@ -10,7 +11,6 @@ const CreateTaskPopup = ({ modal, toggle, save }) => {
     const [description, setDescription] = useState(EditorState.createEmpty());
 
     const handleChange = (e) => {
-
         const { name, value } = e.target
 
         if (name === "taskName") {
@@ -18,32 +18,40 @@ const CreateTaskPopup = ({ modal, toggle, save }) => {
         } else {
             setDescription(value)
         }
-
     }
 
     const handleSave = (e) => {
         e.preventDefault()
         let taskObj = {}
         taskObj["Name"] = taskName
-        taskObj["Description"] = EditorState.createWithContent(description.getCurrentContent())
+        taskObj["Description"] = draftToHtml(convertToRaw(description.getCurrentContent()))
         save(taskObj)
+    }
 
+    const handleChangeEditor = (editorState) => {
+        const contentState = draftToHtml(convertToRaw(editorState.getCurrentContent()))
+        console.log(contentState)
     }
 
     return (
         <Modal isOpen={modal} toggle={toggle}>
             <ModalHeader toggle={toggle}>Create Task</ModalHeader>
             <ModalBody>
-
                 <div className="form-group">
                     <label>Task Name</label>
-                    <input type="text" className="form-control" value={taskName} onChange={handleChange} name="taskName" maxLength={10} />
+                    <input type="text" className="form-control" value={taskName} onChange={handleChange} name="taskName" maxLength={20}/>
                 </div>
                 <div className="form-group">
                     <label>Description</label>
-                    <textarea rows="5" className="form-control" value={description} onChange={handleChange} name="description"></textarea>
+                    {/* <textarea rows="5" className="form-control" value={description} onChange={handleChange} name="description"></textarea> */}
                 </div>
-
+                <Editor
+                    defaultEditorState={description}
+                    onEditorStateChange={editorState => {
+                        setDescription(editorState);
+                        handleChangeEditor(editorState);
+                    }}
+                />
             </ModalBody>
             <ModalFooter>
                 <Button color="primary" onClick={handleSave}>Create</Button>{' '}
