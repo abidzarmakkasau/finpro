@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Editor } from 'react-draft-wysiwyg';
-import { EditorState, convertToRaw } from 'draft-js';
+import { convertToRaw } from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import draftToHtml from 'draftjs-to-html';
 
 
 const CreateTaskPopup = ({ modal, toggle, save }) => {
     const [taskName, setTaskName] = useState('');
-    const [description, setDescription] = useState(EditorState.createEmpty());
+    const [description, setDescription] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -28,10 +28,10 @@ const CreateTaskPopup = ({ modal, toggle, save }) => {
         save(taskObj)
     }
 
-    const handleChangeEditor = (editorState) => {
-        const contentState = draftToHtml(convertToRaw(editorState.getCurrentContent()))
-        console.log(contentState)
-    }
+    // const handleChangeEditor = (editorState) => {
+    //     const contentState = draftToHtml(convertToRaw(editorState.getCurrentContent()))
+    //     console.log(contentState)
+    // }
 
     return (
         <Modal isOpen={modal} toggle={toggle}>
@@ -49,7 +49,7 @@ const CreateTaskPopup = ({ modal, toggle, save }) => {
                     defaultEditorState={description}
                     onEditorStateChange={editorState => {
                         setDescription(editorState);
-                        handleChangeEditor(editorState);
+                        // handleChangeEditor(editorState);
                     }}
                 />
             </ModalBody>

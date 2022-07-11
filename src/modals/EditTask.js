@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Editor } from 'react-draft-wysiwyg';
-import { EditorState, convertToRaw } from 'draft-js';
+import { EditorState, convertToRaw, ContentState } from 'draft-js';
+
 // import { stateToHTML } from "draft-js-export-html";
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
 
 const EditTaskPopup = ({ modal, toggle, updateTask, taskObj }) => {
     const [taskName, setTaskName] = useState('');
-    const [description, setDescription] = useState(EditorState.createEmpty());
+    const [description, setDescription] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -30,13 +32,17 @@ const EditTaskPopup = ({ modal, toggle, updateTask, taskObj }) => {
 
     useEffect(() => {
         setTaskName(taskObj.Name)
-        setDescription(taskObj.Description)
+        setDescription(EditorState.createWithContent(
+            ContentState.createFromBlockArray(
+                htmlToDraft(taskObj.Description)
+            )
+        ))
     }, [])
 
-    const handleChangeEditor = (editorState) => {
-        const contentState = draftToHtml(convertToRaw(editorState.getCurrentContent()))
-        console.log(contentState)
-    }
+    // const handleChangeEditor = (editorState) => {
+    //     const contentState = draftToHtml(convertToRaw(editorState.getCurrentContent()))
+    //     console.log(contentState)
+    // }
 
     return (
         <Modal isOpen={modal} toggle={toggle}>
@@ -44,7 +50,7 @@ const EditTaskPopup = ({ modal, toggle, updateTask, taskObj }) => {
             <ModalBody>
                 <div className="form-group">
                     <label>Task Name</label>
-                    <input type="text" className="form-control" value={taskName} onChange={handleChange} name="taskName" maxLength={20}/>
+                    <input type="text" className="form-control" value={taskName} onChange={handleChange} name="taskName" maxLength={20} />
                 </div>
                 <div className="form-group">
                     <label>Description</label>
@@ -54,7 +60,7 @@ const EditTaskPopup = ({ modal, toggle, updateTask, taskObj }) => {
                     defaultEditorState={description}
                     onEditorStateChange={editorState => {
                         setDescription(editorState);
-                        handleChangeEditor(editorState);
+                        // handleChangeEditor(editorState);
                     }}
                 />
             </ModalBody>
