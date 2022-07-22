@@ -45,10 +45,10 @@ const Card = ({ taskObj, index, deleteTask, updateListArray }) => {
         <div className="card-wrapper mr-5">
             <div className="card-top" style={{ backgroundColor: colors[index % 5].primaryColor }}></div>
             <div className="task-holder">
-                <div className="card-header">
+                <div className="card-header" style={{ backgroundColor: "white", borderRadius: "15px" }}>
                     <span>{taskObj.Name}</span>
                 </div>
-                <div className="overflow-auto" dangerouslySetInnerHTML={{ __html: taskObj.Description }}></div>
+                <div className="overflow-auto" style={{ backgroundColor: "white", borderRadius: "10px" }} dangerouslySetInnerHTML={{ __html: taskObj.Description }}></div>
 
                 <div style={{ position: "absolute", right: "200px", bottom: "30px" }}>
                     <i className="fas fa-edit fa-lg" style={{ color: colors[index % 5].primaryColor, cursor: "pointer", marginRight: "10px" }} onClick={() => setModal(true)}></i>
