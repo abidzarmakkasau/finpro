@@ -39,11 +39,6 @@ const EditTaskPopup = ({ modal, toggle, updateTask, taskObj }) => {
         ))
     }, [])
 
-    // const handleChangeEditor = (editorState) => {
-    //     const contentState = draftToHtml(convertToRaw(editorState.getCurrentContent()))
-    //     console.log(contentState)
-    // }
-
     return (
         <Modal isOpen={modal} toggle={toggle}>
             <ModalHeader toggle={toggle}>Update Task</ModalHeader>
@@ -54,13 +49,11 @@ const EditTaskPopup = ({ modal, toggle, updateTask, taskObj }) => {
                 </div>
                 <div className="form-group">
                     <label>Description</label>
-                    {/* <textarea rows="5" className="form-control" value={description} onChange={handleChange} name="description"></textarea> */}
                 </div>
                 <Editor
                     defaultEditorState={description}
                     onEditorStateChange={editorState => {
                         setDescription(editorState);
-                        // handleChangeEditor(editorState);
                     }}
                 />
             </ModalBody>
